@@ -1,20 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState, useEffect } from 'react';
+import { useFonts } from 'expo-font';
+import {View} from 'react-native';
 
-export default function App() {
+function Clock(){
+
+  let [fontsLoaded] = useFonts({
+    'DS-DIGITAL': require('./assets/fonts/ds-digital/DS-DIGI.TTF'),
+  });
+
+  const [date, setDate] = useState(new Date());
+  
+  function refreshClock() {
+    setDate(new Date());
+  }
+  useEffect(() => {
+    const timerId = setInterval(refreshClock, 1000);
+    return function cleanup() {
+      clearInterval(timerId);
+    };
+  }, []);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={{backgroundColor:"black", flex: 1, 
+    alignItems: 'center',
+    justifyContent: 'center',}}>
+    <span style={{fontFamily:"DS-DIGITAL", fontSize:60, color:"#fec232",}}>
+      {date.toLocaleTimeString()}
+    </span>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+
+export default Clock;
